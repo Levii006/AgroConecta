@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro Conecta • Marketplace do Campo</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white border-b shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-emerald-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner">🌱</div>
+                    <h1 class="logo-font text-3xl font-bold text-emerald-700 tracking-tighter">Agro Conecta</h1>
+                </div>
+
+                <!-- Menu com links para as seções -->
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                    <a href="#home" onclick="navigateToSection('home'); return false;" class="hover:text-emerald-600 transition-colors flex items-center gap-1">
+                        <i class="fa-solid fa-house"></i> Início
+                    </a>
+                    <a href="#comprar" onclick="navigateToSection('comprar'); return false;" class="hover:text-emerald-600 transition-colors flex items-center gap-1">
+                        <i class="fa-solid fa-shopping-cart"></i> Comprar
+                    </a>
+                    <a onclick="handleAnunciarClick(); return false;" class="hover:text-emerald-600 transition-colors flex items-center gap-1 cursor-pointer">
+                        <i class="fa-solid fa-plus-circle"></i> Anunciar
+                    </a>
+                    <a href="#como-funciona" onclick="navigateToSection('como-funciona'); return false;" class="hover:text-emerald-600 transition-colors flex items-center gap-1">
+                        <i class="fa-solid fa-question-circle"></i> Como funciona
+                    </a>
+                    
+                    <!-- Minha Conta (só aparece logado) -->
+                    <a id="nav-minha-conta" href="#minha-conta" onclick="navigateToSection('minha-conta'); return false;" class="hidden hover:text-emerald-600 transition-colors flex items-center gap-1">
+                        <i class="fa-solid fa-user-circle"></i> Minha Conta
+                    </a>
+                </div>
+
+                <!-- Barra de Pesquisa -->
+                <div class="flex-1 max-w-xl mx-8">
+                    <div class="search-bar">
+                        <i class="fa-solid fa-magnifying-glass text-emerald-600"></i>
+                        <input id="search-input" type="text" 
+                               placeholder="O que você procura hoje? Ex: Morango, Milho..."
+                               onkeyup="if(event.key === 'Enter') handleSearch()">
+                        <button onclick="handleSearch()" class="btn-primary text-sm">Buscar</button>
+                    </div>
+                </div>
+
+                <!-- Ações do usuário -->
+<div class="flex items-center gap-4">
+    <div id="user-logged-out" class="flex items-center gap-3">
+        <!-- Botões agora são links para as páginas -->
+        <a href="login.html" class="btn-secondary">Entrar</a>
+        <a href="cadastro.html" class="btn-primary">Cadastrar</a>
+    </div>
+    
+    <!-- Usuário logado -->
+    <div id="user-logged-in" class="hidden items-center gap-3">
+        <div class="user-info">
+            <div class="avatar">👨‍🌾</div>
+            <div>
+                <p id="user-name-display" class="font-semibold text-sm"></p>
+                <p class="text-[10px] text-emerald-600 -mt-0.5">`Piedade, SP</p>
+            </div>
+        </div>
+        <button onclick="logout()" class="text-xl text-gray-600 hover:text-red-600">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+    </div>
+    
+    <!-- Mobile menu button -->
+    <button onclick="toggleMobileMenu()" class="md:hidden text-2xl text-emerald-700">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+</div>
+
+        <!-- Mobile Menu -->
+<div id="mobile-menu" class="hidden md:hidden bg-white border-t px-6 py-4">
+    <div class="flex flex-col gap-4 text-sm">
+        <a href="index.html" class="flex items-center gap-3 py-3">Início</a>
+        <a href="#comprar" onclick="navigateToSection('comprar');toggleMobileMenu(); return false;" class="flex items-center gap-3 py-3">Comprar</a>
+        <a onclick="handleAnunciarClick();toggleMobileMenu(); return false;" class="flex items-center gap-3 py-3">Anunciar</a>
+        <a href="#como-funciona" onclick="navigateToSection('como-funciona');toggleMobileMenu(); return false;" class="flex items-center gap-3 py-3">Como funciona</a>
+        
+        <div class="h-px bg-gray-200 my-2"></div>
+        
+        <!-- Links para login e cadastro no mobile -->
+        <a href="login.html" class="flex items-center gap-3 py-3 font-medium text-emerald-700">Entrar na conta</a>
+        <a href="cadastro.html" class="bg-emerald-600 text-white rounded-3xl text-center py-3 font-semibold">Cadastrar grátis</a>
+    </div>
+</div>
+    </nav>
+
+    <section id="home" class="hero-bg min-h-screen flex items-center text-white">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-5 py-2 rounded-3xl text-sm font-medium">
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    Conectando o campo ao Brasil
+                </div>
+                <h2 class="text-6xl md:text-7xl font-bold leading-none logo-font tracking-tighter">
+                    O marketplace<br>feito para quem<br>planta e colhe!
+                </h2>
+                <p class="text-xl max-w-md text-white/90">
+                    Agricultores vendendo direto. Compradores encontrando o melhor preço. 
+                    Sem intermediários. Simples e justo.
+                </p>
+                <div class="flex items-center gap-4">
+    <a href="cadastro.html" 
+       class="large-button bg-white text-emerald-700 hover:bg-emerald-50 rounded-3xl font-semibold flex items-center gap-3 shadow-lg">
+        <i class="fa-solid fa-seedling"></i> 
+        Quero começar agora!
+    </a>
+    
+    <a href="#comprar" 
+       onclick="navigateToSection('comprar'); return false;" 
+       class="large-button border-2 border-white hover:bg-white/10 rounded-3xl font-semibold flex items-center gap-3">
+        Ver produtos 
+        <i class="fa-solid fa-arrow-right"></i>
+    </a>
+</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIAS -->
+    <section class="max-w-7xl mx-auto px-6 py-16 bg-white">
+        <h2 class="text-4xl font-semibold mb-10 text-center">Do que você precisa hoje?</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div onclick="searchCategory('frutas')" class="bg-white rounded-3xl p-8 text-center hover:shadow-xl hover:-translate-y-2 transition-all cursor-pointer border">
+                <div class="text-7xl mb-6">🍓</div>
+                <h4 class="font-semibold text-xl">Frutas</h4>
+            </div>
+            <div onclick="searchCategory('legumes')" class="bg-white rounded-3xl p-8 text-center hover:shadow-xl hover:-translate-y-2 transition-all cursor-pointer border">
+                <div class="text-7xl mb-6">🥕</div>
+                <h4 class="font-semibold text-xl">Legumes</h4>
+            </div>
+            <div onclick="searchCategory('graos')" class="bg-white rounded-3xl p-8 text-center hover:shadow-xl hover:-translate-y-2 transition-all cursor-pointer border">
+                <div class="text-7xl mb-6">🌽</div>
+                <h4 class="font-semibold text-xl">Grãos</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUTOS - Comprar -->
+    <section id="comprar" class="max-w-7xl mx-auto px-6 py-16 bg-white">
+        <div class="flex items-end justify-between mb-8">
+            <h2 class="text-4xl font-semibold">O que está sendo vendido agora</h2>
+        </div>
+        <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section id="como-funciona" class="max-w-7xl mx-auto px-6 py-20 bg-gradient-to-br from-emerald-50 to-white">
+        <div class="text-center mb-16">
+            <h1 class="text-5xl font-bold logo-font text-emerald-700 mb-4">Como funciona o Agro Conecta?</h1>
+            <p class="max-w-2xl mx-auto text-xl text-gray-600">
+                Uma plataforma simples, criada especialmente para os agricultores do Estado de São Paulo
+            </p>
+        </div>
+
+        <!-- Motivo da criação -->
+        <div class="bg-white rounded-3xl shadow-xl p-10 mb-16 max-w-4xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <div class="flex-1">
+                    <div class="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-3xl text-sm font-semibold mb-6">
+                        <i class="fa-solid fa-leaf"></i> MISSÃO DO AGRO CONECTA
+                    </div>
+                    <h2 class="text-4xl font-semibold mb-6 leading-tight">
+                        Ajudar agricultores do Estado de São Paulo<br>e reduzir a emissão de gases do efeito estufa
+                    </h2>
+                    <p class="text-gray-600 text-lg leading-relaxed">
+                        O Agro Conecta foi criado para conectar diretamente quem planta com quem compra, 
+                        sem intermediários. Assim, os agricultores do estado do estado de São Paulo vendem mais rápido, 
+                        ganham mais e o Brasil reduz o uso de transportes longos — diminuindo significativamente 
+                        a emissão de gases do efeito estufa.
+                    </p>
+                    <div class="mt-8 flex items-center gap-8 text-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="text-4xl">🌾</div>
+                            <div><strong>+1.000</strong><br>agricultores conectados</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="text-4xl">🚚</div>
+                            <div><strong>-42%</strong><br>emissão de CO₂ estimada</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1 text-center text-8xl">🌍🌱🚜</div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-3xl p-8 text-center shadow-sm">
+                <div class="text-6xl mb-6">1️⃣</div>
+                <h3 class="font-semibold text-2xl mb-3">Cadastre-se em 60 segundos</h3>
+                <p class="text-gray-600">Só precisa de e-mail e telefone. Totalmente grátis.</p>
+            </div>
+            <div class="bg-white rounded-3xl p-8 text-center shadow-sm">
+                <div class="text-6xl mb-6">2️⃣</div>
+                <h3 class="font-semibold text-2xl mb-3">Anuncie ou compre</h3>
+                <p class="text-gray-600">Coloque seus produtos à venda ou encontre o que precisa com um clique.</p>
+            </div>
+            <div class="bg-white rounded-3xl p-8 text-center shadow-sm">
+                <div class="text-6xl mb-6">3️⃣</div>
+                <h3 class="font-semibold text-2xl mb-3">Negocie direto no campo</h3>
+                <p class="text-gray-600">Converse pelo WhatsApp. Sem taxa, sem complicação.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MINHA CONTA -->
+    <section id="minha-conta" class="max-w-7xl mx-auto px-6 py-16 bg-white hidden">
+        <!-- conteúdo -->
+        <div class="account-section">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-10">
+                <div>
+                    <h1 class="text-5xl font-bold logo-font text-emerald-700">Minha Conta</h1>
+                    <p id="conta-nome" class="text-2xl text-gray-600 mt-2"></p>
+                </div>
+                <div class="mt-6 md:mt-0">
+                    <button onclick="showVenderModal()" class="btn-primary flex items-center gap-3">
+                        <i class="fa-solid fa-plus-circle"></i> Novo Anúncio
+                    </button>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-semibold mb-6">📦 Meus Anúncios e Vendas</h2>
+            <div id="meus-anuncios-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+            <div id="no-anuncios" class="hidden text-center py-16">
+                <p class="text-7xl mb-6">🌾</p>
+                <p class="text-2xl font-medium">Você ainda não tem anúncios</p>
+                <p class="text-gray-500">Publique seu primeiro produto agora!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (com suporte e créditos) -->
+    <footer class="bg-emerald-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-6">
+            <!-- conteúdo do footer -->
+            <div class="grid md:grid-cols-4 gap-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-4xl">🌱</div>
+                        <h1 class="logo-font text-4xl font-bold">Agro Conecta</h1>
+                    </div>
+                    <p class="text-emerald-200">Marketplace direto do campo.</p>
+                </div>
+                <div>
+                    <p class="font-semibold mb-4">Para Agricultores</p>
+                    <ul class="space-y-3 text-sm text-emerald-200">
+                        <li>Anunciar produtos</li>
+                        <li>Receber pedidos</li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-semibold mb-4">Para Compradores</p>
+                    <ul class="space-y-3 text-sm text-emerald-200">
+                        <li>Preços justos</li>
+                        <li>Comprar direto</li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-semibold mb-4">Suporte</p>
+                    <a href="https://wa.me/5515991234567" target="_blank" class="flex items-center gap-3 text-emerald-200 hover:text-white">
+                        <i class="fa-brands fa-whatsapp text-3xl"></i>
+                        <div>
+                            <p class="font-semibold">(15) 99871-7407</p>
+                            <p class="text-xs">Suporte e Créditos</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Créditos -->
+            <div class="mt-16 pt-8 border-t border-emerald-800 text-sm">
+                <p class="font-medium text-emerald-200 mb-4 text-center md:text-left">Créditos da construção do site</p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-x-8 gap-y-4 text-emerald-100">
+                    <a href="https://wa.me/5515998717407" target="_blank" class="flex items-center gap-2 hover:text-white">
+                        <i class="fa-solid fa-code"></i> Desenvolvedor: Levi Vitorio 252190
+                    </a>
+                    <a href="https://wa.me/5515996542592" target="_blank" class="flex items-center gap-2 hover:text-white">
+                        <i class="fa-solid fa-lightbulb"></i> Planejador: Isabelly Hoffmann 240379
+                    </a>
+                    <a href="https://wa.me/553172614676" target="_blank" class="flex items-center gap-2 hover:text-white">
+                        <i class="fa-solid fa-palette"></i> Designer: Maria Luísa 252288
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+</body>
+</html>
