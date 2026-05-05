@@ -82,8 +82,10 @@ function handleCadastro(e) {
     e.preventDefault();
     const nome = document.getElementById('nome').value;
     const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
     
-    if (nome && email) {
+    if (nome && email && senha) {
+        CadastroUsuario(nome, email, senha);
         alert(`✅ Cadastro realizado com sucesso!\n\nBem-vindo, ${nome}!`);
         window.location.href = "index.html";
     }
@@ -124,3 +126,40 @@ function init() {
 window.onload = init;
 
 
+// Inicio código backend
+
+const Connection = require('tedious').Connection;
+var Request = require('tedious').Request;
+
+const config = require('./dbconfig');
+
+
+/*var connection = new Connection(config);
+    connection.on('connect', function(err) {
+        if (err) {
+            console.log('Connection failed', err);
+        } else {
+            console.log('Connected with Windows authentication');
+        }
+    }); */
+
+    function CadastroUsuario(nome, email, senha){
+        connection.on('connect', function(err) {
+            if (err) {
+                console.log('Connection failed', err);
+            } else {
+                console.log('Connected with Windows authentication');
+                 var request = new Request(
+                `INSERT INTO dbo.usuario(username, email, senha) VALUES ('${nome}', '${email}', '${senha}')`,
+                    function(err) {
+                        if (err) {
+                            console.log('Erro ao cadastrar usuário', err);
+                        } else {
+                            console.log('Usuário cadastrado com sucesso');
+                        }
+                    }
+                    );
+                    connection.execSql(request);
+                }
+        }); 
+    }
