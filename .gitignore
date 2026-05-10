@@ -1,6 +1,7 @@
-/.vscode
+.vscode
 
-/js/node_modules
+js/node_modules
 
 js/package.json
 js/package-lock.json
+
