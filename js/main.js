@@ -1,3 +1,4 @@
+
 let produtos = [
     { id: 1, nome: "Morango Orgânico", preco: "R$ 100,00", unidade: "kg", descricao: "Caixa com 20kg fresquinho.", imagem: "img/produtos/morango.avif", categoria: "frutas", vendedor: "Maria Oliveira", local: "Itapetininga, SP", telefone: "(15) 98877-5544" },
     { id: 2, nome: "Milho Verde", preco: "R$ 80,00", unidade: "saco", descricao: "Saco de 30kg de Milho Verde de alta qualidade.", imagem: "img/produtos/milho.jpg", categoria: "graos", vendedor: "José Mendes", local: "Sorocaba, SP", telefone: "(15) 99712-3344" },
@@ -83,24 +84,68 @@ function handleCadastro(e) {
     const nome = document.getElementById('nome').value;
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
-    
+
     if (nome && email && senha) {
-        CadastroUsuario(nome, email, senha);
-        alert(`✅ Cadastro realizado com sucesso!\n\nBem-vindo, ${nome}!`);
-        window.location.href = "index.html";
+
+        fetch('http://localhost:3000/cadastrar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, email, senha })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status} ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Resposta do servidor:', data);
+            if (data.validade === false) {
+                alert('Cadastro já presente no sistema!');
+                return;
+            }
+            alert(`✅ Cadastro realizado com sucesso!\n\nBem-vindo, ${nome}!`);
+            window.location.href = "index.html";
+        })
+        .catch(error => {
+            console.error('Erro ao cadastrar usuário:', error);
+            alert('Erro ao cadastrar usuário. Verifique o console para detalhes.');
+        });
     }
 }
 
 // Login
 function handleLogin(e) {
+    
     e.preventDefault();
     const email = document.getElementById('login-email').value;
+    const senha = document.getElementById('login-senha').value;
     
-    if (email) {
-        usuarioLogado = { nome: email.split('@')[0], email: email };
-        localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-        alert("Login realizado com sucesso!");
-        window.location.href = "index.html";
+    if (email && senha) {
+        fetch('http://localhost:3000/login', {  
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, senha })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status} ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Resposta do servidor:', data);
+            if (data.validade === false) {
+                alert('Email ou senha incorretos!');
+                return;
+            }
+            alert("Login realizado com sucesso!");
+            window.location.href = "index.html";
+        })
+        .catch(error => {
+            console.error('Erro ao fazer login:', error);
+            alert('Erro ao fazer login. Verifique o console para detalhes.');
+        });
     }
 }
 
@@ -126,40 +171,3 @@ function init() {
 window.onload = init;
 
 
-// Inicio código backend
-
-const Connection = require('tedious').Connection;
-var Request = require('tedious').Request;
-
-const config = require('./dbconfig');
-
-
-/*var connection = new Connection(config);
-    connection.on('connect', function(err) {
-        if (err) {
-            console.log('Connection failed', err);
-        } else {
-            console.log('Connected with Windows authentication');
-        }
-    }); */
-
-    function CadastroUsuario(nome, email, senha){
-        connection.on('connect', function(err) {
-            if (err) {
-                console.log('Connection failed', err);
-            } else {
-                console.log('Connected with Windows authentication');
-                 var request = new Request(
-                `INSERT INTO dbo.usuario(username, email, senha) VALUES ('${nome}', '${email}', '${senha}')`,
-                    function(err) {
-                        if (err) {
-                            console.log('Erro ao cadastrar usuário', err);
-                        } else {
-                            console.log('Usuário cadastrado com sucesso');
-                        }
-                    }
-                    );
-                    connection.execSql(request);
-                }
-        }); 
-    }
