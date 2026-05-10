@@ -106,6 +106,8 @@ function handleCadastro(e) {
             }
             alert(`✅ Cadastro realizado com sucesso!\n\nBem-vindo, ${nome}!`);
             window.location.href = "index.html";
+            usuarioLogado = { email, nome: data.nome };
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
         })
         .catch(error => {
             console.error('Erro ao cadastrar usuário:', error);
@@ -139,7 +141,9 @@ function handleLogin(e) {
                 alert('Email ou senha incorretos!');
                 return;
             }
-            alert("Login realizado com sucesso!");
+            alert(`Login realizado com sucesso!\n\nBem-vindo, ${data.nome}!`);
+            usuarioLogado = { email, nome: data.nome };
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
             window.location.href = "index.html";
         })
         .catch(error => {
@@ -160,8 +164,7 @@ function logout() {
 function init() {
     // Verificar se usuário está logado
     const savedUser = localStorage.getItem('usuarioLogado');
-    if (savedUser) {
-        usuarioLogado = JSON.parse(savedUser);
+    if (savedUser !== null) {
         updateUserUI();
     }
     
